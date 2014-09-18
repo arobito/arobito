@@ -1,30 +1,58 @@
 # -*- coding: utf-8 -*-
 
+# Copyright 2014 The Arobito Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+Parts of the web application
+"""
+
 import cherrypy
 from sys import stderr
 from os import path
 import re
-from robi.controlinterface import Controller
+from arobito.controlinterface import Controller
 import traceback
-from robi.Base import SingletonMeta, find_root_path
-from robi import FsTools
+from arobito.Base import SingletonMeta, find_root_path
+from arobito import FsTools
 import configparser
 
-__author__ = 'Juergen Edelbluth'
+__license__ = 'Apache License V2.0'
+__copyright__ = 'Copyright 2014 The Arobito Project'
+__author__ = 'Jürgen Edelbluth'
+__credits__ = ['Jürgen Edelbluth']
+__maintainer__ = 'Jürgen Edelbluth'
 
 
-class RobiControlInterfaceStatics(object):
+class ArobitoControlInterfaceStatics(object):
+    """
+    This class delivers static content over the web interface, e.g. JavaScript, HTML files, CSS files and images.
+    """
 
+    #: find the mime type by file ending
     mime_extract_regex = re.compile('\.(?P<attr>[^\.]+?)$', re.IGNORECASE)
+    #: when no mime type could be identified
     default_mime_type = 'application/octet-stream'
+    #: supported mime types by file ending
     mime_types = dict(html='application/xhtml+xml', png='image/png', gif='image/gif', jpeg='image/jpeg',
                       jpg='image/jpeg', css='text/css', js='text/javascript', xml='application/xml',
                       xhtml='application/xhtml+xml')
 
-    """
-    Serve static content out of the package
-    """
     def __init__(self):
+        """
+        Look in the config file 'controller.ini' for the folder with the static contents to serve.
+        """
         self.conf_file = FsTools.get_config_file('controller.ini')
         config = configparser.ConfigParser()
         config.read(self.conf_file)
@@ -61,7 +89,7 @@ class RobiControlInterfaceStatics(object):
         self.root_dir = static_folder
 
     @cherrypy.expose
-    def default(self, *args):
+    def default(self, *args) -> bytes:
         """
         Serve static content directly out of the package
         """
@@ -86,12 +114,12 @@ class RobiControlInterfaceStatics(object):
         if not path.isfile(file):
             print('Statics Server: File is not a file: "{:s}"'.format(file), file=stderr)
             raise cherrypy.HTTPError(404, 'File not found')
-        match = RobiControlInterfaceStatics.mime_extract_regex.search(file)
+        match = ArobitoControlInterfaceStatics.mime_extract_regex.search(file)
         if not match:
             print('Statics Server: File does not match mime regex: "{:s}"'.format(file), file=stderr)
             raise cherrypy.HTTPError(404, 'File not found')
         mt = match.group('attr').lower()
-        mime = RobiControlInterfaceStatics.mime_types.get(mt, RobiControlInterfaceStatics.default_mime_type)
+        mime = ArobitoControlInterfaceStatics.mime_types.get(mt, ArobitoControlInterfaceStatics.default_mime_type)
         cherrypy.response.headers['Content-type'] = mime
         try:
             with open(file, 'rb') as fh:
@@ -101,20 +129,20 @@ class RobiControlInterfaceStatics(object):
         return file_bytes
 
 
-class RobiControlInterfaceRedirect(object):
+class ArobitoControlInterfaceRedirect(object):
     """
-    The control application itself
+    On the web interface root, make a simple redirect to the static index page.
     """
     @cherrypy.expose
     def index(self):
         raise cherrypy.HTTPRedirect("/static/index.html")
 
 
-class RobiControlInterface(object, metaclass=SingletonMeta):
+class ArobitoControlInterface(object, metaclass=SingletonMeta):
     """
     Main Class to control the Robi Web Based Interface
     """
-    def __init__(self, bind_ip='0.0.0.0', listen_port=9812):
+    def __init__(self, bind_ip: str='0.0.0.0', listen_port: int=9812):
         """
         Configure a control server for Robi
         :param bind_ip: The IP to bind to
@@ -124,10 +152,11 @@ class RobiControlInterface(object, metaclass=SingletonMeta):
         self.listen_port = listen_port
         pass
 
-    def startup(self):
+    def startup(self) -> int:
         """
         Start the Server
-        :rtype : int
+        
+        :rtype : The exit status code
         """
         cherrypy.log.access_file = None
         cherrypy.log.screen = None
@@ -147,7 +176,7 @@ class RobiControlInterface(object, metaclass=SingletonMeta):
                 'server.socket_port': self.listen_port,
                 'autoreload.on': False
             }})
-            cherrypy.tree.mount(RobiControlInterfaceRedirect(), '/', {'/': {
+            cherrypy.tree.mount(ArobitoControlInterfaceRedirect(), '/', {'/': {
                 'tools.gzip.on': False,
                 'tools.encode.on': False,
                 'tools.response_headers.on': True,
@@ -160,7 +189,7 @@ class RobiControlInterface(object, metaclass=SingletonMeta):
                     ('X-Content-Type-Options', 'nosniff')
                 ]
             }})
-            cherrypy.tree.mount(RobiControlInterfaceStatics(), '/static', {'/': {
+            cherrypy.tree.mount(ArobitoControlInterfaceStatics(), '/static', {'/': {
                 'tools.gzip.on': False,
                 'tools.encode.on': False,
                 'tools.response_headers.on': True,
