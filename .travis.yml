@@ -6,4 +6,4 @@ python:
 install: "pip install -q -r requirements.txt"
 
 # command to run tests (docs)
-script: sphinx-build -nW -b html -d build/doctrees source build/html
+script: sphinx-build -nW -b html -d doc/build/doctrees doc/source doc/build/html
