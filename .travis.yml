@@ -1,9 +1,0 @@
-language: python
-python:
-  - "3.4"
-
-# command to install dependencies (docs)
-install: "pip install -q -r doc/requirements.txt"
-
-# command to run tests (docs)
-script: sphinx-build -nW -b html -d _build/doctrees doc/source doc/build/html
