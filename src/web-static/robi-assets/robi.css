@@ -1,0 +1,43 @@
+@charset 'UTF-8';
+
+body {
+    background-color: #ededed;
+    padding: 0px;
+    margin: 0px;
+}
+
+header {
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 3px solid #666666;
+    background-color: #999999;
+    background-image: url('robi-eyes_150x84.png');
+    background-attachment: fixed;
+    background-position: 10px 5px;
+    background-repeat: no-repeat;
+    padding-left: 175px;
+    height: 95px;
+}
+
+header h1 {
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 24px;
+    padding: 0px;
+    margin: 0px;
+    line-height: 95px;
+}
+
+div#loginForm {
+    background-color: #aaaaaa;
+    text-align: right;
+    padding: 3px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+div#application {
+    margin: 0px;
+    margin-top: 10px;
+    padding: 5px;
+}

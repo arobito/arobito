@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Robi Web Control</title>
+    <link rel="stylesheet" type="text/css" href="/static/jq/jquery-ui/jquery-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/jq/jquery-ui/jquery-ui.structure.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/jq/jquery-ui/jquery-ui.theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/jq/jquery/growl/jquery.growl.css" />
+    <link rel="stylesheet" type="text/css" href="/static/jq/w2ui/w2ui-1.4.1.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/robi-assets/robi.css" />
+    <script type="text/javascript" src="/static/jq/jquery/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="/static/jq/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/static/jq/jquery/growl/jquery.growl.js"></script>
+    <script type="text/javascript" src="/static/jq/w2ui/w2ui-1.4.1.min.js"></script>
+    <script type="text/javascript" src="/static/robi-assets/robi-app.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Robi Web Control</h1>
+    </header>
+    <div id="loginForm">
+        <form method="post" action="/app/auth">
+            <input type="text" name="username" placeholder="User Name" />
+            <input type="password" name="password" placeholder="Password" />
+            <input type="submit" name="login" value="Login" />
+        </form>
+    </div>
+    <div id="application"></div>
+</body>
+</html>
