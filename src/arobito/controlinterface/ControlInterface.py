@@ -156,7 +156,7 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
         """
         Start the Server
 
-        :return : The exit status code
+        :returns: The exit status code
         """
         cherrypy.log.access_file = None
         cherrypy.log.screen = None
