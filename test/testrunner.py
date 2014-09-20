@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Copyright 2014 The Arobito Project
@@ -24,7 +25,6 @@ adding tests simply by adding packages and classes. Only rule: All test case cla
 
 import os
 import sys
-import unittest
 from testlibs import Lister
 import unittest
 
