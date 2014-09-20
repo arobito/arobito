@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+This module is our primary test runner.
+
+It iterates through all modules under the package test and searches for unit test test cases and runs them. This allows
+adding tests simply by adding packages and classes. Only rule: All test case classes must reside in modules under the
+``tests`` module.
+"""
+
 import os
 import sys
 import unittest
@@ -27,22 +35,26 @@ __credits__ = ['Jürgen Edelbluth']
 __maintainer__ = 'Jürgen Edelbluth'
 
 
-def test_suite_setup() -> list:
+def test_suite_setup() -> None:
     """
-    Setup the test suite
+    Setup the test runner: Make the Arobito source code accessible.
     """
-
-    # First, add our sources to the system path
     sys.path.insert(0, os.path.abspath('../src/'))
 
 
 def run_tests() -> int:
+    """
+    Get all classes and run the tests.
+
+    :return: 0 when all tests succeeded, 1 otherwise.
+    """
     test_classes = Lister.enlist_all_classes('tests')
 
     run_count = 0
     failure_count = 0
     error_count = 0
     case_count = 0
+
     for test_class in test_classes:
         __import__(test_class.__module__)
         if not issubclass(test_class, unittest.TestCase):
@@ -64,4 +76,5 @@ def run_tests() -> int:
 if __name__ == '__main__':
     print('Arobito Test Runner')
     test_suite_setup()
+    # Important: Return with the return code from the run!
     sys.exit(run_tests())

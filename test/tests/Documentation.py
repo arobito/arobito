@@ -14,6 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+The Documentation Module contains tests about the source code documentation.
+"""
+
 import unittest
 from testlibs import Lister
 import sys
@@ -40,17 +44,35 @@ class DefaultFields(unittest.TestCase):
     """
 
     def check_license(self, mod: str, fields: list) -> None:
+        """
+        Check if the __license__ field contains our standard text.
+
+        :param mod: Name of the module to check
+        :param fields: List of fields in the module
+        """
         self.failIf('__license__' not in fields, '__license__ not set for module {:s}'.format(mod))
         self.assertEqual(sys.modules[mod].__license__, 'Apache License V2.0',
                          '__license__ wrong for module {:s}'.format(mod))
 
     def check_copyright(self, mod: str, fields: list) -> None:
+        """
+        Check if the __copyright__ field contains our standard text.
+
+        :param mod: Name of the module to check
+        :param fields: List of fields in the module
+        """
         self.failIf('__copyright__' not in fields,  '__copyright__ not set for module {:s}'.format(mod))
         self.assertEqual(sys.modules[mod].__copyright__,
                          'Copyright {:d} The Arobito Project'.format(datetime.now().year),
                          '__copyright__ wrong for module {:s}'.format(mod))
 
     def check_author(self, mod: str, fields: list) -> None:
+        """
+        Check if the __author__ field is set up correctly.
+
+        :param mod: Name of the module to check
+        :param fields: List of fields in the module
+        """
         self.failIf('__author__' not in fields, '__author__ not set for module {:s}'.format(mod))
         self.failIf(type(sys.modules[mod].__author__) is not str, ' Invalid __author__ type in module {:s}'.format(mod))
         self.failIf(len(sys.modules[mod].__author__.strip()) <= 0,  'No __author__ set in module {:s}'.format(mod))
@@ -58,6 +80,12 @@ class DefaultFields(unittest.TestCase):
                          '__author__ contains whitespaces at start or end {:s}'.format(mod))
 
     def check_credits(self, mod: str, fields: list) -> None:
+        """
+        Check if the __credits__ field is set up correctly.
+
+        :param mod: Name of the module to check
+        :param fields: List of fields in the module
+        """
         self.failIf('__credits__' not in fields, '__credits__ not set for module {:s}'.format(mod))
         self.failIf(type(sys.modules[mod].__credits__) is not list,
                     '__credits__ are not defined as list in module {:s}'.format(mod))
@@ -71,6 +99,12 @@ class DefaultFields(unittest.TestCase):
                              .format(mod))
 
     def check_maintainer(self, mod: str, fields: list) -> None:
+        """
+        Check if the __maintainer__ field is set up correctly.
+
+        :param mod: Name of the module to check
+        :param fields: List of fields in the module
+        """
         self.failIf('__maintainer__' not in fields, '__maintainer__ not set for module {:s}'.format(mod))
         self.failIf(type(sys.modules[mod].__maintainer__) is not str,
                     ' Invalid __maintainer__ type in module {:s}'.format(mod))
@@ -80,6 +114,9 @@ class DefaultFields(unittest.TestCase):
                          '__maintainer__ contains whitespaces at start or end {:s}'.format(mod))
 
     def runTest(self) -> None:
+        """
+        Go though all modules and launch the tests for every single one.
+        """
         candidates_arobito = Lister.enlist_all_modules()
         candidates_tests = Lister.enlist_all_modules('tests')
         candidates = candidates_arobito + candidates_tests

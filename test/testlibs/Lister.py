@@ -14,6 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+This is the place to put functions that we need in many tests.
+"""
+
 from pkgutil import iter_modules as get_modules
 import inspect
 import sys
