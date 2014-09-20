@@ -1,4 +1,4 @@
 #!/bin/bash
 
 cd test
-./testrunner.py
+python3.4 testrunner.py
