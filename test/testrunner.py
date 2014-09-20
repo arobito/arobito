@@ -16,6 +16,9 @@
 
 import os
 import sys
+import unittest
+from testlibs import Lister
+import unittest
 
 __license__ = 'Apache License V2.0'
 __copyright__ = 'Copyright 2014 The Arobito Project'
@@ -24,5 +27,41 @@ __credits__ = ['Jürgen Edelbluth']
 __maintainer__ = 'Jürgen Edelbluth'
 
 
-# Add the source code to the system path
-sys.path.insert(0, os.path.abspath('../src/'))
+def test_suite_setup() -> list:
+    """
+    Setup the test suite
+    """
+
+    # First, add our sources to the system path
+    sys.path.insert(0, os.path.abspath('../src/'))
+
+
+def run_tests() -> int:
+    test_classes = Lister.enlist_all_classes('tests')
+
+    run_count = 0
+    failure_count = 0
+    error_count = 0
+    case_count = 0
+    for test_class in test_classes:
+        __import__(test_class.__module__)
+        if not issubclass(test_class, unittest.TestCase):
+            continue
+        case_count += 1
+        suite = unittest.TestSuite()
+        suite.addTest(test_class())
+        runner = unittest.TextTestRunner()
+        module_result = runner.run(suite)
+        run_count += module_result.testsRun
+        failure_count += len(module_result.failures)
+        error_count += len(module_result.errors)
+
+    if error_count > 0 or failure_count > 0:
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    print('Arobito Test Runner')
+    test_suite_setup()
+    sys.exit(run_tests())
