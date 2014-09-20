@@ -29,7 +29,7 @@ __credits__ = ['Jürgen Edelbluth']
 __maintainer__ = 'Jürgen Edelbluth'
 
 
-def _enlist_all_modules(list_of_modules: list, package: str='arobito') -> None:
+def __enlist_all_modules(list_of_modules: list, package: str='arobito') -> None:
     """
     List all modules within a given package and all subpackages.
 
@@ -46,7 +46,7 @@ def _enlist_all_modules(list_of_modules: list, package: str='arobito') -> None:
     # Walk it
     for importer, mod_name, is_package in get_modules(pack.__path__, pack.__name__ + '.'):
         if is_package:
-            _enlist_all_modules(list_of_modules=list_of_modules, package=mod_name)
+            __enlist_all_modules(list_of_modules=list_of_modules, package=mod_name)
             continue
         list_of_modules.append(mod_name)
 
@@ -59,7 +59,7 @@ def enlist_all_modules(package: str='arobito') -> list:
     :return: The list of modules
     """
     list_of_modules = list()
-    _enlist_all_modules(list_of_modules, package)
+    __enlist_all_modules(list_of_modules, package)
     return list_of_modules
 
 
