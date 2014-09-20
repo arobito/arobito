@@ -37,6 +37,8 @@ class SingletonMeta(type):
 
     Add ``metaclass=SingletonMeta`` to the class' options to make it a singleton.
     """
+    
+    #: Store the instances in a private static field
     __instances = {}
 
     def __call__(cls, *args, **kwargs):
