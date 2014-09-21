@@ -68,10 +68,11 @@ def run_tests() -> int:
         failure_count += len(module_result.failures)
         error_count += len(module_result.errors)
 
+    print('---------------------------')
     print('Arobito Test Runner Results')
     print('---------------------------')
-    print('Test cases run: {:d}'.format(case_count))
-    print('Tests run: {:d}'.format(run_count))
+    print('Test cases ran: {:d}'.format(case_count))
+    print('Tests ran: {:d}'.format(run_count))
     print('Failures: {:d}'.format(failure_count))
     print('Errors: {:d}'.format(error_count))
 
@@ -85,6 +86,7 @@ def run_tests() -> int:
 
 if __name__ == '__main__':
     print('Arobito Test Runner')
+    print('-------------------')
     test_suite_setup()
     # Important: Return with the return code from the run!
     sys.exit(run_tests())
