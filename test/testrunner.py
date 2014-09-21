@@ -68,8 +68,18 @@ def run_tests() -> int:
         failure_count += len(module_result.failures)
         error_count += len(module_result.errors)
 
+    print('Arobito Test Runner Results')
+    print('---------------------------')
+    print('Test cases run: {:d}'.format(case_count))
+    print('Tests run: {:d}'.format(run_count))
+    print('Failures: {:d}'.format(failure_count))
+    print('Errors: {:d}'.format(error_count))
+
     if error_count > 0 or failure_count > 0:
+        print('TEST RUN FAILED.')
         return 1
+
+    print('TEST RUN SUCCESSFUL.')
     return 0
 
 
