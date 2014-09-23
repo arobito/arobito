@@ -48,6 +48,11 @@ def run_tests() -> int:
 
     :return: 0 when all tests succeeded, 1 otherwise.
     """
+    print('===================', file=sys.stderr)
+    print('Arobito Test Runner', file=sys.stderr)
+    print('===================', file=sys.stderr)
+    print(file=sys.stderr)
+
     test_classes = Lister.enlist_all_classes('tests')
 
     run_count = 0
@@ -91,9 +96,6 @@ def run_tests() -> int:
 
 
 if __name__ == '__main__':
-    print('Arobito Test Runner', file=sys.stderr)
-    print('-------------------', file=sys.stderr)
-    print(file=sys.stderr)
     test_suite_setup()
     # Important: Return with the return code from the run!
     sys.exit(run_tests())
