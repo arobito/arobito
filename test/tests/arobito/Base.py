@@ -30,9 +30,6 @@ class SingletonMock(object, metaclass=arobito.Base.SingletonMeta):
     """
 
     def __init__(self):
-        """
-        Initialize class with a simple field
-        """
         self.value = 'After Init'
 
     def set_value(self, value: str) -> None:
@@ -52,7 +49,7 @@ class SingletonMock(object, metaclass=arobito.Base.SingletonMeta):
 
 class Singleton(unittest.TestCase):
     """
-    Test the singleton meta class (:py:class:`<arobito.Base.SingletonMeta>`)
+    Test the singleton meta class (:py:class:`SingletonMeta <arobito.Base.SingletonMeta>`)
     """
 
     def runTest(self) -> None:
@@ -78,7 +75,7 @@ class Singleton(unittest.TestCase):
 
 class CreateSalt(unittest.TestCase):
     """
-    Test the :py:func:`<arobito.Base.create_salt>` function
+    Test the :py:func:`create_salt <arobito.Base.create_salt>` function
     """
 
     def runTest(self) -> None:
