@@ -52,7 +52,7 @@ class SingletonMock(object, metaclass=arobito.Base.SingletonMeta):
 
 class Singleton(unittest.TestCase):
     """
-    Test the singleton meta class
+    Test the singleton meta class (:py:class:`<.arobito.Base.SingletonMeta>`)
     """
 
     def runTest(self) -> None:
@@ -74,3 +74,17 @@ class Singleton(unittest.TestCase):
         self.assertEqual(singleton_one, singleton_two, 'Singleton 1 and 2 are not equal')
         self.assertEqual(singleton_one.get_value(), singleton_two.get_value(),
                          'The values in Singleton 1 and Singleton 2 are not equal')
+
+
+class CreateSalt(unittest.TestCase):
+    """
+    Test the :py:func:`<.arobito.Base.create_salt>` function
+    """
+
+    def runTest(self) -> None:
+        for i in range(1000):
+            salt = arobito.Base.create_salt(i)
+            self.assertEqual(len(salt), i, 'Length of salt is unexpected!')
+            self.failIf('%' in salt, 'Salt contains a "%"')
+        salt = arobito.Base.create_salt()
+        self.assertEqual(len(salt), 128, 'Salt default length wrong')
