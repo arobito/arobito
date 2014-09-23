@@ -74,7 +74,7 @@ def run_tests() -> int:
         run_count += module_result.testsRun
         failure_count += len(module_result.failures)
         error_count += len(module_result.errors)
-        print('--- Finished Test Case "{:s}.{:s}"...'.format(test_class.__module__, test_class.__name__),
+        print('--- Finished Test Case "{:s}.{:s}"'.format(test_class.__module__, test_class.__name__),
               file=sys.stderr)
         print(file=sys.stderr)
 
