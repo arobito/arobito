@@ -55,6 +55,8 @@ def create_salt(length: int=128) -> str:
     :param length: Length of the random string
     :return: A random string
     """
+    if length <= 0:
+        raise ValueError('Salts can only be created for lengths greater than zero')
     char_set = (string.ascii_letters + string.digits + string.punctuation).replace('%', '')
     return ''.join(random.sample(char_set * length, length))
 
@@ -97,6 +99,8 @@ def create_simple_key(length: int=64) -> str:
     :param length: The length of the random string
     :return: A random string
     """
+    if length <= 0:
+        raise ValueError('Salts can only be created for lengths greater than zero')
     char_set = (string.ascii_letters + string.digits)
     return ''.join(random.sample(char_set * length, length))
 
