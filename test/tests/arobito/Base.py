@@ -52,13 +52,13 @@ class SingletonMock(object, metaclass=arobito.Base.SingletonMeta):
 
 class Singleton(unittest.TestCase):
     """
-    Test the singleton meta class (:py:class:`<.arobito.Base.SingletonMeta>`)
+    Test the singleton meta class (:py:class:`<arobito.Base.SingletonMeta>`)
     """
 
     def runTest(self) -> None:
         """
-        Try to create two instances of the singleton (the test uses the :py:class:`<.SingletonMock>` class) and tests if
-        values and instances are equal.
+        Try to create two instances of the singleton (the test uses the :py:class:`SingletonMock <.SingletonMock>`
+        class) and tests if values and instances are equal.
         """
         test_string = 'Value set from test ABC123'
         singleton_one = SingletonMock()
@@ -78,7 +78,7 @@ class Singleton(unittest.TestCase):
 
 class CreateSalt(unittest.TestCase):
     """
-    Test the :py:func:`<.arobito.Base.create_salt>` function
+    Test the :py:func:`<arobito.Base.create_salt>` function
     """
 
     def runTest(self) -> None:
