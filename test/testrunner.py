@@ -59,6 +59,8 @@ def run_tests() -> int:
         __import__(test_class.__module__)
         if not issubclass(test_class, unittest.TestCase):
             continue
+        print('+++ Starting Test Case "{:s}.{:s}"... '.format(test_class.__module__, test_class.__name__),
+              file=sys.stderr)
         case_count += 1
         suite = unittest.TestSuite()
         suite.addTest(test_class())
@@ -67,26 +69,31 @@ def run_tests() -> int:
         run_count += module_result.testsRun
         failure_count += len(module_result.failures)
         error_count += len(module_result.errors)
+        print('--- Finished Test Case "{:s}.{:s}"...'.format(test_class.__module__, test_class.__name__),
+              file=sys.stderr)
+        print(file=sys.stderr)
 
-    print('---------------------------')
-    print('Arobito Test Runner Results')
-    print('---------------------------')
-    print('Test cases ran: {:d}'.format(case_count))
-    print('Tests ran: {:d}'.format(run_count))
-    print('Failures: {:d}'.format(failure_count))
-    print('Errors: {:d}'.format(error_count))
+    print('---------------------------', file=sys.stderr)
+    print('Arobito Test Runner Results', file=sys.stderr)
+    print('---------------------------', file=sys.stderr)
+    print('Test cases ran: {:d}'.format(case_count), file=sys.stderr)
+    print('Tests ran: {:d}'.format(run_count), file=sys.stderr)
+    print('Failures: {:d}'.format(failure_count), file=sys.stderr)
+    print('Errors: {:d}'.format(error_count), file=sys.stderr)
 
+    print(file=sys.stderr)
     if error_count > 0 or failure_count > 0:
-        print('TEST RUN FAILED.')
+        print('TEST RUN FAILED.', file=sys.stderr)
         return 1
 
-    print('TEST RUN SUCCESSFUL.')
+    print('TEST RUN SUCCESSFUL.', file=sys.stderr)
     return 0
 
 
 if __name__ == '__main__':
-    print('Arobito Test Runner')
-    print('-------------------')
+    print('Arobito Test Runner', file=sys.stderr)
+    print('-------------------', file=sys.stderr)
+    print(file=sys.stderr)
     test_suite_setup()
     # Important: Return with the return code from the run!
     sys.exit(run_tests())
