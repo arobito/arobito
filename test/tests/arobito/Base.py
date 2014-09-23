@@ -121,9 +121,9 @@ class CreateSimpleKey(unittest.TestCase):
         self.assertRaises(ValueError, arobito.Base.create_simple_key, -100)
         regex = re.compile('^[a-zA-Z0-9]+$', re.DOTALL)
         for i in range(1, 1000):
-            salt = arobito.Base.create_simple_key(i)
-            self.assertEqual(len(salt), i, 'Length of key is unexpected')
-            self.failIf(regex.match(salt) is None, 'Key "{:s}" does not match the requirements'.format(salt))
-        salt = arobito.Base.create_simple_key()
+            key = arobito.Base.create_simple_key(i)
+            self.assertEqual(len(key), i, 'Length of key is unexpected')
+            self.failIf(regex.match(key) is None, 'Key "{:s}" does not match the requirements'.format(key))
+        key = arobito.Base.create_simple_key()
         # Checking the length is enough here - all other specifications are checked within the loop above.
-        self.assertEqual(len(salt), 64, 'Key default length wrong')
+        self.assertEqual(len(key), 64, 'Key default length wrong')
