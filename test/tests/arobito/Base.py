@@ -37,6 +37,7 @@ class SingletonMock1(object, metaclass=arobito.Base.SingletonMeta):
     def set_value(self, value: str) -> None:
         """
         Set the value
+
         :param value: The value
         """
         self.__value = value
@@ -44,6 +45,7 @@ class SingletonMock1(object, metaclass=arobito.Base.SingletonMeta):
     def get_value(self) -> str:
         """
         Get the value
+
         :return: The value
         """
         return self.__value
@@ -62,6 +64,7 @@ class SingletonMock2(object, metaclass=arobito.Base.SingletonMeta):
     def set_value(self, value: str) -> None:
         """
         Set the value
+
         :param value: The value
         """
         self.__value = value
@@ -69,6 +72,7 @@ class SingletonMock2(object, metaclass=arobito.Base.SingletonMeta):
     def get_value(self) -> str:
         """
         Get the value
+        
         :return: The value
         """
         return self.__value
