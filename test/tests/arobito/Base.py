@@ -25,28 +25,53 @@ __credits__ = ['Jürgen Edelbluth']
 __maintainer__ = 'Jürgen Edelbluth'
 
 
-class SingletonMock(object, metaclass=arobito.Base.SingletonMeta):
+class SingletonMock1(object, metaclass=arobito.Base.SingletonMeta):
     """
     A mock class that is meant to be handled as a singleton. It is used by the :py:class:`Singleton <.Singleton>` test
     case.
     """
 
     def __init__(self):
-        self.value = 'After Init'
+        self.__value = 'After Init'
 
     def set_value(self, value: str) -> None:
         """
         Set the value
         :param value: The value
         """
-        self.value = value
+        self.__value = value
 
     def get_value(self) -> str:
         """
         Get the value
         :return: The value
         """
-        return self.value
+        return self.__value
+
+
+class SingletonMock2(object, metaclass=arobito.Base.SingletonMeta):
+    """
+    A mock class that is meant to be handled as a singleton. It is used by the :py:class:`Singleton <.Singleton>` test
+    case. This is roughly the same thing as :py:class:`SingletonMock1 <.SingletonMock1>`, but it should be another
+    Singleton instance.
+    """
+
+    def __init__(self):
+        self.__value = 'After Init'
+
+    def set_value(self, value: str) -> None:
+        """
+        Set the value
+        :param value: The value
+        """
+        self.__value = value
+
+    def get_value(self) -> str:
+        """
+        Get the value
+        :return: The value
+        """
+        return self.__value
 
 
 class Singleton(unittest.TestCase):
@@ -59,13 +84,13 @@ class Singleton(unittest.TestCase):
 
     def runTest(self) -> None:
         """
-        Try to create two instances of the singleton (the test uses the :py:class:`SingletonMock <.SingletonMock>`
+        Try to create two instances of the singleton (the test uses the :py:class:`SingletonMock1 <.SingletonMock1>`
         class) and tests if values and instances are equal.
         """
-        test_string = 'Value set from test ABC123'
-        singleton_one = SingletonMock()
+        test_string = 'Value set from test'
+        singleton_one = SingletonMock1()
         singleton_one.set_value(test_string)
-        singleton_two = SingletonMock()
+        singleton_two = SingletonMock1()
         self.assertEqual(singleton_two.get_value(), test_string, 'Singleton 2 value does not match test string')
         self.assertEqual(singleton_one, singleton_two, 'Singleton 1 and 2 are not equal')
         self.assertEqual(singleton_one.get_value(), singleton_two.get_value(),
@@ -76,6 +101,32 @@ class Singleton(unittest.TestCase):
         self.assertEqual(singleton_one, singleton_two, 'Singleton 1 and 2 are not equal')
         self.assertEqual(singleton_one.get_value(), singleton_two.get_value(),
                          'The values in Singleton 1 and Singleton 2 are not equal')
+
+
+class DifferentSingletons(unittest.TestCase):
+    """
+    Find out if two different singletons are really independent
+    """
+
+    def runTest(self):
+        """
+        Try to create two different singletons and check if their value is different, getting and setting works on
+        different objects and if the objects are different.
+        """
+        test_string = 'Value set from test'
+        singleton_one = SingletonMock1()
+        singleton_one.set_value(test_string)
+        singleton_two = SingletonMock2()
+        self.assertNotEqual(singleton_two.get_value(), test_string, 'Singleton 2 value equals the test string')
+        self.assertNotEqual(singleton_one, singleton_two, 'Singleton 1 and 2 are equal')
+        self.assertNotEqual(singleton_one.get_value(), singleton_two.get_value(),
+                            'The values in Singleton 1 and Singleton 2 are +equal')
+        test_string = 'Another value'
+        singleton_two.set_value(test_string)
+        self.assertNotEqual(singleton_one.get_value(), test_string, 'Singleton 1 value does match test string')
+        self.assertNotEqual(singleton_one, singleton_two, 'Singleton 1 and 2 are equal')
+        self.assertNotEqual(singleton_one.get_value(), singleton_two.get_value(),
+                            'The values in Singleton 1 and Singleton 2 are equal')
 
 
 class CreateSalt(unittest.TestCase):
