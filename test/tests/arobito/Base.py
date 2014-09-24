@@ -178,3 +178,12 @@ class CreateSimpleKey(unittest.TestCase):
         key = arobito.Base.create_simple_key()
         # Checking the length is enough here - all other specifications are checked within the loop above.
         self.assertEqual(len(key), 64, 'Key default length wrong')
+
+
+class HashPassword(unittest.TestCase):
+    """
+    Test the :py:func:`hash_password <arobito.Base.hash_password>` function
+    """
+
+    def runTest(self):
+        self.fail('Not implemented yet!')
