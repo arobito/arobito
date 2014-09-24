@@ -79,7 +79,7 @@ def run_tests() -> int:
     print('---------------------------', file=sys.stderr)
     print('Arobito Test Runner Results', file=sys.stderr)
     print('---------------------------', file=sys.stderr)
-    print('Test cases ran: {:d}'.format(case_count), file=sys.stderr)
+    print('Tests enlisted: {:d}'.format(case_count), file=sys.stderr)
     print('Tests ran: {:d}'.format(run_count), file=sys.stderr)
     print('Failures: {:d}'.format(failure_count), file=sys.stderr)
     print('Errors: {:d}'.format(error_count), file=sys.stderr)
