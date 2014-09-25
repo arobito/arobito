@@ -250,7 +250,7 @@ class HashPassword(unittest.TestCase):
                          'e2ffcde8ef443c4c014c67b93349d3431384d', 'Hash wrong')
         self.assertEqual(arobito.Base.hash_password(test_password, salt='geek', secret='nerd', rounds=2),
                          '9fc4437aae7243e3d251875d156986ced0c6d9171a9fd2bd6c2e8993d96aba910a986e700e3967a72c372831b31'
-                         '729e6df16c2f1ec42e308af4fcdae11399e2d')
+                         '729e6df16c2f1ec42e308af4fcdae11399e2d', 'Hash wrong')
         self.assertEqual(arobito.Base.hash_password(test_password, salt='geek', secret='nerd', rounds=3),
                          'e927a8cba9dfd49a7b6df2b5fffcc3d27317a22df4ab61b2c36b8b1c106f51a8d92337b60f792aa985dd9c011d1'
-                         'd4d046de95ca38d03dc77595c7c1829fa1899')
+                         'd4d046de95ca38d03dc77595c7c1829fa1899', 'Hash wrong')
