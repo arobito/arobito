@@ -68,7 +68,10 @@ def run_tests() -> int:
             continue
         case_count += 1
         suite.addTest(test_class())
+        print('[{:>6d}] Test Case "{:s}.{:s}" enlisted.'
+              .format(case_count, test_class.__module__, test_class.__name__), file=sys.stderr)
 
+    print(file=sys.stderr)
     runner = unittest.TextTestRunner()
     module_result = runner.run(suite)
     run_count += module_result.testsRun
