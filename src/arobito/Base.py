@@ -61,7 +61,7 @@ def create_salt(length: int=128) -> str:
     return ''.join(random.sample(char_set * length, length))
 
 
-def hash_password(password: str, salt: str, rounds: int=1000, secret: str=None) -> str:
+def hash_password(password: str, salt: str=None, rounds: int=1000, secret: str=None) -> str:
     """
     Hash a given password
 
@@ -69,7 +69,7 @@ def hash_password(password: str, salt: str, rounds: int=1000, secret: str=None) 
     is defined, it is added to the password/the hash on each round of hashing. The secret is added only once. To make it
     harder to compromise, there are a lot of rounds of re-hashing hash+salt. 1000 rounds is the default.
 
-    Attention: If you don't use a salt or zero rounds, the hashing is 100 percent useless. You might want to create a
+    Attention: Using zero rounds is one hundred percent useless. You'll receive an exception. You might want to create a
     salt using the :py:func:`create_salt() <.create_salt>` function in this module.
 
     :param password: The clear text password
@@ -78,15 +78,19 @@ def hash_password(password: str, salt: str, rounds: int=1000, secret: str=None) 
     :param secret: The application secret
     :return: A string of hex numbers
     """
-    h = hashlib.new('sha512')
+    if password is None or len(password) <= 0:
+        raise ValueError('A password must be given')
+    if rounds is None or rounds < 1:
+        raise ValueError('Rounds must be 1 or larger')
     data = password
     if not secret is None:
         data += secret
-    for i in range(1, rounds):
+    for i in range(0, rounds):
+        h = hashlib.new('sha512')
         if not salt is None:
             data += salt
         h.update(str.encode(data))
-        data = h.hexdigest()
+        data = str(h.hexdigest())
     return data
 
 
