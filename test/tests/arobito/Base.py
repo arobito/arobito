@@ -202,12 +202,14 @@ class HashPassword(unittest.TestCase):
         for p in bad_password_values:
             for r in bad_round_values:
                 self.assertRaises(ValueError, arobito.Base.hash_password, password=p, rounds=r)
+
+        hash_regex = re.compile('^[a-f0-9]{128}$')
         test_password = 'test1234'
         for salt in [None, 'aaa', '', arobito.Base.create_salt()]:
             for secret in [None, 'aaa', '', arobito.Base.create_salt()]:
                 for rounds in range(1, 10000, 250):
-                    self.assertEqual(len(arobito.Base.hash_password(test_password, salt, rounds, secret)), 128,
-                                     'Invalid Hash length')
+                    f = hash_regex.match(arobito.Base.hash_password(test_password, salt, rounds, secret))
+                    self.failIf(f is None, 'Hash does not look like the our pattern')
 
         self.assertEqual(arobito.Base.hash_password(test_password, rounds=1),
                          '2bbe0c48b91a7d1b8a6753a8b9cbe1db16b84379f3f91fe115621284df7a48f1cd71e9beb90ea614c7bd924250a'
