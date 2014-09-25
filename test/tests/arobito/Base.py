@@ -16,7 +16,6 @@
 
 import unittest
 import arobito.Base
-import re
 
 __license__ = 'Apache License V2.0'
 __copyright__ = 'Copyright 2014 The Arobito Project'
@@ -148,11 +147,11 @@ class CreateSalt(unittest.TestCase):
         self.assertRaises(ValueError, arobito.Base.create_salt, 0)
         self.assertRaises(ValueError, arobito.Base.create_salt, -1)
         self.assertRaises(ValueError, arobito.Base.create_salt, -100)
-        regex = re.compile('^[a-zA-Z0-9\|\^\.,;_\-:<>+\]\[\(\)\$!&=\"\'´`\*@:~\{\}#\?/\\\]+$', re.DOTALL)
         for i in range(1, 1000):
             salt = arobito.Base.create_salt(i)
             self.assertEqual(len(salt), i, 'Length of salt is unexpected')
-            self.failIf(regex.match(salt) is None, 'Salt "{:s}" does not match the requirements'.format(salt))
+            self.assertRegex(salt, '^[a-zA-Z0-9\|\^\.,;_\-:<>+\]\[\(\)\$!&=\"\'´`\*@:~\{\}#\?/\\\]+$',
+                             'Salt "{:s}" does not match the requirements'.format(salt))
         salt = arobito.Base.create_salt()
         # Checking the length is enough here - all other specifications are checked within the loop above.
         self.assertEqual(len(salt), 128, 'Salt default length wrong')
@@ -174,11 +173,10 @@ class CreateSimpleKey(unittest.TestCase):
         self.assertRaises(ValueError, arobito.Base.create_simple_key, 0)
         self.assertRaises(ValueError, arobito.Base.create_simple_key, -1)
         self.assertRaises(ValueError, arobito.Base.create_simple_key, -100)
-        regex = re.compile('^[a-zA-Z0-9]+$', re.DOTALL)
         for i in range(1, 1000):
             key = arobito.Base.create_simple_key(i)
             self.assertEqual(len(key), i, 'Length of key is unexpected')
-            self.failIf(regex.match(key) is None, 'Key "{:s}" does not match the requirements'.format(key))
+            self.assertRegex(key, '^[a-zA-Z0-9]+$', 'Key "{:s}" does not match the requirements'.format(key))
         key = arobito.Base.create_simple_key()
         # Checking the length is enough here - all other specifications are checked within the loop above.
         self.assertEqual(len(key), 64, 'Key default length wrong')
@@ -203,13 +201,12 @@ class HashPassword(unittest.TestCase):
             for r in bad_round_values:
                 self.assertRaises(ValueError, arobito.Base.hash_password, password=p, rounds=r)
 
-        hash_regex = re.compile('^[a-f0-9]{128}$')
         test_password = 'test1234'
         for salt in [None, 'aaa', '', arobito.Base.create_salt()]:
             for secret in [None, 'aaa', '', arobito.Base.create_salt()]:
                 for rounds in range(1, 10000, 250):
-                    f = hash_regex.match(arobito.Base.hash_password(test_password, salt, rounds, secret))
-                    self.failIf(f is None, 'Hash does not look like the our pattern')
+                    self.assertRegex(arobito.Base.hash_password(test_password, salt, rounds, secret),
+                                     '^[a-f0-9]{128}$', 'Hash does not match pattern')
 
         self.assertEqual(arobito.Base.hash_password(test_password, rounds=1),
                          '2bbe0c48b91a7d1b8a6753a8b9cbe1db16b84379f3f91fe115621284df7a48f1cd71e9beb90ea614c7bd924250a'
