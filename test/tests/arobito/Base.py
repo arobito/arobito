@@ -265,7 +265,7 @@ class FindRootPath(unittest.TestCase):
     quite different results. So the only thing we could test is, that this function delivers a valid path name.
     """
 
-    def validate_path(self, path):
+    def __validate_path(self, path):
         self.assertIsNotNone(path, 'Path is none')
         self.assertIsInstance(path, str, 'Path is not a string')
         self.assertTrue(os.path.exists(path), 'Path does not exist')
@@ -278,7 +278,7 @@ class FindRootPath(unittest.TestCase):
         the function to make sure it always comes up with the same result.
         """
         path1 = arobito.Base.find_root_path()
-        self.validate_path(path1)
+        self.__validate_path(path1)
         path2 = arobito.Base.find_root_path()
-        self.validate_path(path2)
+        self.__validate_path(path2)
         self.assertEqual(path1, path2, 'Subsequent calls lead to different results')
