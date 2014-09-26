@@ -115,6 +115,6 @@ def find_root_path() -> str:
 
     :return: The root path as string
     """
-    if hasattr(sys, "frozen"):
+    if hasattr(sys, 'frozen'):
         return dirname(sys.executable)
     return sys.path[0]
