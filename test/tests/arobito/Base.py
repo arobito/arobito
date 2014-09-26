@@ -259,7 +259,7 @@ class HashPassword(unittest.TestCase):
 
 class FindRootPath(unittest.TestCase):
     """
-    Test the :py:func:`hash_password <arobito.Base.find_root_path>` function
+    Test the :py:func:`find_root_path <arobito.Base.find_root_path>` function
 
     This function is not easy to test. It detects the path from where this application runs. But when testing, there are
     quite different results. So the only thing we could test is, that this function delivers a valid path name.
