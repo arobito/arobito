@@ -43,7 +43,7 @@ class DefaultFields(unittest.TestCase):
     This ensures a minimum of documentation.
     """
 
-    def check_license(self, mod: str, fields: list) -> None:
+    def __check_license(self, mod: str, fields: list) -> None:
         """
         Check if the __license__ field contains our standard text.
 
@@ -54,7 +54,7 @@ class DefaultFields(unittest.TestCase):
         self.assertEqual(sys.modules[mod].__license__, 'Apache License V2.0',
                          '__license__ wrong for module {:s}'.format(mod))
 
-    def check_copyright(self, mod: str, fields: list) -> None:
+    def __check_copyright(self, mod: str, fields: list) -> None:
         """
         Check if the __copyright__ field contains our standard text.
 
@@ -66,7 +66,7 @@ class DefaultFields(unittest.TestCase):
                          'Copyright {:d} The Arobito Project'.format(datetime.now().year),
                          '__copyright__ wrong for module {:s}'.format(mod))
 
-    def check_author(self, mod: str, fields: list) -> None:
+    def __check_author(self, mod: str, fields: list) -> None:
         """
         Check if the __author__ field is set up correctly.
 
@@ -79,7 +79,7 @@ class DefaultFields(unittest.TestCase):
         self.assertEqual(len(sys.modules[mod].__author__), len(sys.modules[mod].__author__.strip()),
                          '__author__ contains whitespaces at start or end {:s}'.format(mod))
 
-    def check_credits(self, mod: str, fields: list) -> None:
+    def __check_credits(self, mod: str, fields: list) -> None:
         """
         Check if the __credits__ field is set up correctly.
 
@@ -98,7 +98,7 @@ class DefaultFields(unittest.TestCase):
                              'At least one element in __credits__ contains whitespaces at start or end in module {:s}'
                              .format(mod))
 
-    def check_maintainer(self, mod: str, fields: list) -> None:
+    def __check_maintainer(self, mod: str, fields: list) -> None:
         """
         Check if the __maintainer__ field is set up correctly.
 
@@ -127,8 +127,8 @@ class DefaultFields(unittest.TestCase):
             else:
                 mod = __import__(module_name, globals(), locals())
             fields = dir(mod)
-            self.check_license(module_name, fields)
-            self.check_copyright(module_name, fields)
-            self.check_author(module_name, fields)
-            self.check_credits(module_name, fields)
-            self.check_maintainer(module_name, fields)
+            self.__check_license(module_name, fields)
+            self.__check_copyright(module_name, fields)
+            self.__check_author(module_name, fields)
+            self.__check_credits(module_name, fields)
+            self.__check_maintainer(module_name, fields)
