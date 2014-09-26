@@ -265,14 +265,14 @@ class FindRootPath(unittest.TestCase):
     quite different results. So the only thing we could test is, that this function delivers a valid path name.
     """
 
-    def __validate_path(self, path):
+    def __validate_path(self, path) -> None:
         self.assertIsNotNone(path, 'Path is none')
         self.assertIsInstance(path, str, 'Path is not a string')
         self.assertTrue(os.path.exists(path), 'Path does not exist')
         self.assertTrue(os.path.isabs(path), 'Path is not absolute')
         self.assertTrue(os.path.isdir(path), 'Path is not a directory')
 
-    def runTest(self):
+    def runTest(self) -> None:
         """
         Test that the function result is not None, is a path, that path is absolute and exists. It does a few calls to
         the function to make sure it always comes up with the same result.
