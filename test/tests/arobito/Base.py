@@ -16,6 +16,7 @@
 
 import unittest
 import arobito.Base
+import os.path
 
 __license__ = 'Apache License V2.0'
 __copyright__ = 'Copyright 2014 The Arobito Project'
@@ -254,3 +255,30 @@ class HashPassword(unittest.TestCase):
         self.assertEqual(arobito.Base.hash_password(test_password, salt='geek', secret='nerd', rounds=3),
                          'e927a8cba9dfd49a7b6df2b5fffcc3d27317a22df4ab61b2c36b8b1c106f51a8d92337b60f792aa985dd9c011d1'
                          'd4d046de95ca38d03dc77595c7c1829fa1899', 'Hash wrong')
+
+
+class FindRootPath(unittest.TestCase):
+    """
+    Test the :py:func:`hash_password <arobito.Base.find_root_path>` function
+
+    This function is not easy to test. It detects the path from where this application runs. But when testing, there are
+    quite different results. So the only thing we could test is, that this function delivers a valid path name.
+    """
+
+    def __validate_path(self, path):
+        self.assertIsNotNone(path, 'Path is none')
+        self.assertIsInstance(path, str, 'Path is not a string')
+        self.assertTrue(os.path.exists(path), 'Path does not exist')
+        self.assertTrue(os.path.isabs(path), 'Path is not absolute')
+        self.assertTrue(os.path.isdir(path), 'Path is not a directory')
+
+    def runTest(self):
+        """
+        Test that the function result is not None, is a path, that path is absolute and exists. It does a few calls to
+        the function to make sure it always comes up with the same result.
+        """
+        path1 = arobito.Base.find_root_path()
+        self.__validate_path(path1)
+        path2 = arobito.Base.find_root_path()
+        self.__validate_path(path2)
+        self.assertEqual(path1, path2, 'Subsequent calls lead to different results')
