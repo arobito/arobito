@@ -2,8 +2,14 @@ language: python
 python:
   - "3.4"
 
-# command to install dependencies (docs)
-install: ./prepare-build.sh
+cache:
+  directories:
+    - $HOME/.pip-cache/
+
+# install dependencies
+install:
+  - pip install -q -r src/requirements.txt --download-cache $HOME/.pip-cache
+  - pip install -q -r test/requirements.txt --download-cache $HOME/.pip-cache
 
 # command to run tests (docs)
 script: ./run-tests.sh
