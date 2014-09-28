@@ -13,5 +13,6 @@ install:
   - pip install -r src/requirements.txt --download-cache $HOME/.pip-cache
   - pip install -r test/requirements.txt --download-cache $HOME/.pip-cache
 
-# command to run tests (docs)
-script: ./run-tests.sh
+# command to run tests
+script:
+  - (cd test && python3.4 testrunner.py)
