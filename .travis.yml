@@ -15,4 +15,4 @@ install:
 
 # command to run tests
 script:
-  - (cd test && python3.4 testrunner.py)
+  - (cd test && python testrunner.py)
