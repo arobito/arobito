@@ -6,12 +6,12 @@ cache:
   pip: true
   directories:
     - $HOME/.pip-cache/
-    - $HOME/virtualenv/python3.4
+    - $HOME/virtualenv/
 
 # install dependencies
 install:
-  - pip install -r src/requirements.txt --download-cache $HOME/.pip-cache
-  - pip install -r test/requirements.txt --download-cache $HOME/.pip-cache
+  - pip install -q -r src/requirements.txt --download-cache $HOME/.pip-cache
+  - pip install -q -r test/requirements.txt --download-cache $HOME/.pip-cache
 
 # command to run tests
 script:
