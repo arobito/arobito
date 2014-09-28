@@ -15,3 +15,13 @@ install:
 # command to run tests
 script:
   - (cd test && python testrunner.py)
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+  irc:
+    on_success: always
+    on_failure: always
+  channels:
+    - "chat.freenode.net#arobito"
