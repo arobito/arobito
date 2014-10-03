@@ -59,8 +59,8 @@ class UserManagerGetUserByUsernameAndPassword(unittest.TestCase):
         self.assertIn('last_access', user_object, 'Last access timestamp is not in user object')
         self.assertIsInstance(user_object['timestamp'], float, 'Timestamp is not a float')
         self.assertIsInstance(user_object['last_access'], float, 'Last access is not a float')
-        self.assertEqual(user_object['timestamp'], user_object['last_access'],
-                         'Timestamp and last access are not equal')
+        self.assertTrue(user_object['timestamp'] <= user_object['last_access'],
+                        'Timestamp is not less or equal the last access')
 
         # And some wrong stuff
         user_object = user_manager.get_user_by_username_and_password('arobito', 'wrong_password')
