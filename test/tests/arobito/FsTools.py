@@ -32,7 +32,7 @@ class GetConfigFolder(unittest.TestCase):
     For this test, it is very important, that there are no env variables are set and no special folders are created.
     """
 
-    def __check_default(self):
+    def __check_default(self) -> None:
         """
         Check the default folder returned, without additional configuration. It expects the current folder.
         """
@@ -40,8 +40,39 @@ class GetConfigFolder(unittest.TestCase):
         path_expected = os.path.abspath(os.path.join(os.path.abspath(os.getcwd())))
         self.assertEqual(path_expected, path_generated, 'Path is not the one expected')
 
-    def runTest(self):
+    def runTest(self) -> None:
         """
         This very basic test checks if the folder returned for the configuration files.
         """
         self.__check_default()
+
+
+class GetConfigFile(unittest.TestCase):
+    """
+    Test the :py:func:`get_config_file <arobito.FsTools.get_config_file>` function
+    """
+
+    def __check_default(self) -> None:
+        """
+        Check with defaults, and clean up afterwards
+        """
+        conf_file = arobito.FsTools.get_config_file()
+        self.assertTrue(conf_file.endswith('arobito.ini'))
+        self.assertTrue(os.path.exists(conf_file))
+        os.remove(conf_file)
+
+    def __check_with_name(self) -> None:
+        """
+        Check with a dedicated file name, and clean up afterwards
+        """
+        conf_file = arobito.FsTools.get_config_file('testing.ini')
+        self.assertTrue(conf_file.endswith('testing.ini'))
+        self.assertTrue(os.path.exists(conf_file))
+        os.remove(conf_file)
+
+    def runTest(self) -> None:
+        """
+        For now, simply test if the files are created
+        """
+        self.__check_default()
+        self.__check_with_name()
