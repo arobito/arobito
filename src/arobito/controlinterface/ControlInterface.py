@@ -22,7 +22,7 @@ import cherrypy
 from sys import stderr
 from os import path
 import re
-from arobito.controlinterface import Controller
+from arobito.controlinterface import ControllerFrontend
 import traceback
 from arobito.Base import SingletonMeta, find_root_path
 from arobito import FsTools
@@ -133,7 +133,7 @@ class ArobitoControlInterfaceRedirect(object):
     """
     On the web interface root, make a simple redirect to the static index page.
     """
-    
+
     @cherrypy.expose
     def index(self) -> None:
         """
@@ -195,7 +195,7 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
             }})
             cherrypy.tree.mount(ArobitoControlInterfaceRedirect(), '/', {'/': {}})
             cherrypy.tree.mount(ArobitoControlInterfaceStatics(), '/static', {'/': {}})
-            cherrypy.tree.mount(Controller.App(), '/app', {'/': {}})
+            cherrypy.tree.mount(ControllerFrontend.App(), '/app', {'/': {}})
             cherrypy.engine.start()
             cherrypy.engine.block()
             return 0
