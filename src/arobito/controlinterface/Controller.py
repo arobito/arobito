@@ -292,8 +292,7 @@ class App(object):
 
         Use the session key for all later requests.
 
-        In case of a failed login, the default fail response (:py:attribute:`auth_default_response
-        <.auth_default_response>` will look like this:
+        In case of a failed login, the default fail response will look like this:
 
         .. code-block:: javascript
 
