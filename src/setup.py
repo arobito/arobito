@@ -26,10 +26,11 @@ setup(
     name='arobito',
     version='',
     packages=['arobito', 'arobito.controlinterface'],
-    url='',
+    url='https://arobito.github.io/',
     license='Apache License v2.0',
     author='The Arobito Project',
     author_email='',
-    description=''
+    description='',
+    requires=['cherrypy', 'ws4py']
 )
 

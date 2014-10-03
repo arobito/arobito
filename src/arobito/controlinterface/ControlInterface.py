@@ -22,7 +22,7 @@ import cherrypy
 from sys import stderr
 from os import path
 import re
-from arobito.controlinterface import Controller
+from arobito.controlinterface import ControllerFrontend
 import traceback
 from arobito.Base import SingletonMeta, find_root_path
 from arobito import FsTools
@@ -133,8 +133,9 @@ class ArobitoControlInterfaceRedirect(object):
     """
     On the web interface root, make a simple redirect to the static index page.
     """
+
     @cherrypy.expose
-    def index(self):
+    def index(self) -> None:
         """
         Do only the redirect to ``/static/index.html``.
         """
@@ -145,9 +146,11 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
     """
     Main Class to control the Robi Web Based Interface
     """
+
     def __init__(self, bind_ip: str='0.0.0.0', listen_port: int=9812):
         """
         Configure a control server for Robi
+
         :param bind_ip: The IP to bind to
         :param listen_port: The port to listen to
         """
@@ -177,9 +180,7 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
             cherrypy.config.update({'global': {
                 'server.socket_host': self.bind_ip,
                 'server.socket_port': self.listen_port,
-                'autoreload.on': False
-            }})
-            cherrypy.tree.mount(ArobitoControlInterfaceRedirect(), '/', {'/': {
+                'autoreload.on': False,
                 'tools.gzip.on': False,
                 'tools.encode.on': False,
                 'tools.response_headers.on': True,
@@ -192,32 +193,9 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
                     ('X-Content-Type-Options', 'nosniff')
                 ]
             }})
-            cherrypy.tree.mount(ArobitoControlInterfaceStatics(), '/static', {'/': {
-                'tools.gzip.on': False,
-                'tools.encode.on': False,
-                'tools.response_headers.on': True,
-                'tools.response_headers.headers': [
-                    ('X-Frame-Options', 'DENY'),
-                    ('X-XSS-Protection', '1; mode=block'),
-                    ('Content-Security-Policy', csp),
-                    ('X-Content-Security-Policy', csp),
-                    ('X-Webkit-CSP', csp),
-                    ('X-Content-Type-Options', 'nosniff')
-                ]
-            }})
-            cherrypy.tree.mount(Controller.App(), '/app', {'/': {
-                'tools.gzip.on': False,
-                'tools.encode.on': False,
-                'tools.response_headers.on': True,
-                'tools.response_headers.headers': [
-                    ('X-Frame-Options', 'DENY'),
-                    ('X-XSS-Protection', '1; mode=block'),
-                    ('Content-Security-Policy', csp),
-                    ('X-Content-Security-Policy', csp),
-                    ('X-Webkit-CSP', csp),
-                    ('X-Content-Type-Options', 'nosniff')
-                ]
-            }})
+            cherrypy.tree.mount(ArobitoControlInterfaceRedirect(), '/', {'/': {}})
+            cherrypy.tree.mount(ArobitoControlInterfaceStatics(), '/static', {'/': {}})
+            cherrypy.tree.mount(ControllerFrontend.App(), '/app', {'/': {}})
             cherrypy.engine.start()
             cherrypy.engine.block()
             return 0
