@@ -63,7 +63,7 @@ def get_config_folder() -> str:
     return the_dir
 
 
-def get_config_file(filename: str='arobito.conf') -> str:
+def get_config_file(filename: str='arobito.ini') -> str:
     """
     Find the location of a configuration file
 
