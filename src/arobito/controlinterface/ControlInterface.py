@@ -133,6 +133,7 @@ class ArobitoControlInterfaceRedirect(object):
     """
     On the web interface root, make a simple redirect to the static index page.
     """
+    
     @cherrypy.expose
     def index(self) -> None:
         """
@@ -145,6 +146,7 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
     """
     Main Class to control the Robi Web Based Interface
     """
+
     def __init__(self, bind_ip: str='0.0.0.0', listen_port: int=9812):
         """
         Configure a control server for Robi
