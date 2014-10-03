@@ -91,7 +91,7 @@ class UserManagerIsSingleton(unittest.TestCase):
     singleton.
     """
 
-    def runTest(self):
+    def runTest(self) -> None:
         """
         Simply create two instances of :py:class:`UserManager <arobito.controlinterface.BackendManager.UserManager>` and
         compare them.
@@ -221,7 +221,7 @@ class SessionManagerIsSingleton(unittest.TestCase):
     singleton.
     """
 
-    def runTest(self):
+    def runTest(self) -> None:
         """
         Simply create two instances of :py:class:`UserManager <arobito.controlinterface.BackendManager.SessionManager>`
         and compare them.
