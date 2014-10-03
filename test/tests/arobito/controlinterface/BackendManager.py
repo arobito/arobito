@@ -169,7 +169,7 @@ class SessionManagerMultiTest(unittest.TestCase):
 
         # Login loop
         key_list = list()
-        for i in range(1, 100):
+        for i in range(0, 1000):
             key = session_manager.login('arobito', 'arobito')
             self.assertIsNotNone(key, 'Key in loop run {:d} is None'.format(i))
             self.assertIsInstance(key, str, 'Key in loop run {:d} is not a String'.format(i))
@@ -178,10 +178,10 @@ class SessionManagerMultiTest(unittest.TestCase):
             session_count = session_manager.get_current_sessions()
             self.__check_count(session_count, i)
 
-        self.assertEqual(len(key_list), 99, 'Key list is not of the size expected')
+        self.assertEqual(len(key_list), 1000, 'Key list is not of the size expected')
 
         # Logout loop
-        for i in range(99, 0, -1):
+        for i in range(1000, 0, -1):
             session_manager.logout(key_list.pop())
             session_count = session_manager.get_current_sessions()
             self.__check_count(session_count, i - 1)
