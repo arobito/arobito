@@ -126,3 +126,66 @@ class AppAuth(unittest.TestCase):
         # Request with invalid object
         response = app.auth(request_invalid)
         self.__check_failed_response(response)
+
+
+class AppLogout(unittest.TestCase):
+    """
+    Test the :py:meth:`App.logout <arobito.controlinterface.ControllerBackend.App.logout>` method.
+    """
+
+    def __check_response(self, response: dict) -> None:
+        """
+        Verify the response object
+
+        :param response: The response object
+        """
+
+        self.assertIsNotNone(response, 'Response is None')
+        self.assertIsInstance(response, dict, 'Response is not a dict')
+        self.assertIn('logout', response, 'Response does not contain logout element')
+        self.assertIsInstance(response['logout'], bool, 'Logout is not boolean')
+        self.assertTrue(response['logout'], 'Logout is not true')
+
+    def runTest(self) -> None:
+        """
+        Test the logout method with real and wrong keys
+        """
+
+        app = create_app(self)
+
+        # Request with None
+        self.assertRaises(ValueError, app.logout, None)
+
+        # Request with bad object
+        self.assertRaises(ValueError, app.logout, list())
+
+        response_wrong = dict(key='wrong_key')
+        request_invalid = dict(invalid='invalid')
+        request_empty = dict()
+
+        # Invalid request
+        response = app.logout(request_invalid)
+        self.__check_response(response)
+
+        # Empty request
+        response = app.logout(request_empty)
+        self.__check_response(response)
+
+        # Wrong request
+        response = app.logout(response_wrong)
+        self.__check_response(response)
+
+        # For a real test, we need a key, and therefore a auth first
+        request_valid = dict(username='arobito', password='arobito')
+        response = app.auth(request_valid)
+        self.assertIsNotNone(response, 'Response is none')
+        self.assertIsInstance(response, dict, 'Response is not a dict')
+        self.assertIn('auth', response, 'Response does not contain an auth element')
+        auth = response['auth']
+        self.assertIn('key', auth, 'Auth object does not contain a key')
+        key = auth['key']
+        self.assertIsNotNone(key, 'Key is None')
+        self.assertIsInstance(key, str, 'Key is not a String')
+        self.assertRegex(key, '^[a-zA-Z0-9]{64}$', 'Key looks not like expected')
+        response = app.logout(dict(key=key))
+        self.__check_response(response)
