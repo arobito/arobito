@@ -19,7 +19,7 @@ Tests for the :py:mod:`BackendManager <arobito.controlinterface.BackendManager>`
 """
 
 import unittest
-from arobito.controlinterface.BackendManager import UserManager
+from arobito.controlinterface.BackendManager import UserManager, SessionManager
 
 __license__ = 'Apache License V2.0'
 __copyright__ = 'Copyright 2014 The Arobito Project'
@@ -31,7 +31,7 @@ __maintainer__ = 'Jürgen Edelbluth'
 class UserManagerGetUserByUsernameAndPassword(unittest.TestCase):
     """
     Test the method :py:meth:`get_user_by_username_and_password
-    <arobito.controlinterface.BackendManager.UserManager.get_user_by_username_and_password` from class
+    <arobito.controlinterface.BackendManager.UserManager.get_user_by_username_and_password>` from class
     :py:class:`UserManager <arobito.controlinterface.BackendManager.UserManager>`.
 
     It works only with the standard settings of the ``users.ini`` file.
@@ -73,3 +73,118 @@ class UserManagerGetUserByUsernameAndPassword(unittest.TestCase):
         # And everything wrong stuff
         user_object = user_manager.get_user_by_username_and_password('wrong_username', 'wrong_password')
         self.assertIsNone(user_object, 'The user should be None, but isn\'t')
+
+
+class UserManagerIsSingleton(unittest.TestCase):
+    """
+    Find out if the :py:class:`UserManager <arobito.controlinterface.BackendManager.UserManager>` is created as
+    singleton.
+    """
+
+    def runTest(self):
+        """
+        Simply create two instances of :py:class:`UserManager <arobito.controlinterface.BackendManager.UserManager>` and
+        compare them.
+        """
+
+        user_manager1 = UserManager()
+        user_manager2 = UserManager()
+        self.assertIsNotNone(user_manager1, 'User Manager 1 is None')
+        self.assertIsNotNone(user_manager2, 'User Manager 2 is None')
+        self.assertEqual(user_manager1, user_manager2, 'User Manager objects are not equal')
+
+
+class SessionManagerLogin(unittest.TestCase):
+    """
+    Test the method :py:meth:`login <arobito.controlinterface.BackendManager.SessionManager.login>` from class
+    :py:class:`SessionManager <arobito.controlinterface.BackendManager.SessionManager>`.
+
+    It works only with the standard settings of the ``controller.ini`` file.
+    """
+
+    def runTest(self):
+        """
+        Try to use the login
+        """
+
+        session_manager = SessionManager()
+        self.assertIsNotNone(session_manager, 'Session Manager is None')
+
+        # Correct credentials
+        key = session_manager.login('arobito', 'arobito')
+        self.assertIsNotNone(key, 'Key is None')
+        self.assertIsInstance(key, str, 'Key is not a String')
+
+
+class SessionManagerLogout(unittest.TestCase):
+    """
+    Test the method :py:meth:`logout <arobito.controlinterface.BackendManager.SessionManager.logout>` from class
+    :py:class:`SessionManager <arobito.controlinterface.BackendManager.SessionManager>`.
+
+    It works only with the standard settings of the ``controller.ini`` file.
+    """
+
+    def runTest(self):
+        pass
+
+
+class SessionManagerCleanup(unittest.TestCase):
+    """
+    Test the method :py:meth:`cleanup <arobito.controlinterface.BackendManager.SessionManager.cleanup>` from class
+    :py:class:`SessionManager <arobito.controlinterface.BackendManager.SessionManager>`.
+
+    It works only with the standard settings of the ``controller.ini`` file.
+    """
+
+    def runTest(self):
+        """
+        Just make sure that there is no exception happening when this method is called.
+
+        During our tests, there will be not enough time to let sessions expire. This is definitely a gap in our tests.
+        """
+        session_manager = SessionManager()
+        session_manager.cleanup()
+
+
+class SessionManagerGetCurrentSessions(unittest.TestCase):
+    """
+    Test the method :py:meth:`get_current_sessions
+    <arobito.controlinterface.BackendManager.SessionManager.get_current_sessions>` from class :py:class:`SessionManager
+    <arobito.controlinterface.BackendManager.SessionManager>`.
+
+    It works only with the standard settings of the ``controller.ini`` file.
+    """
+
+    def runTest(self):
+        pass
+
+
+class SessionManagerGetUser(unittest.TestCase):
+    """
+    Test the method :py:meth:`get_user <arobito.controlinterface.BackendManager.SessionManager.get_user>` from class
+    :py:class:`SessionManager <arobito.controlinterface.BackendManager.SessionManager>`.
+
+    It works only with the standard settings of the ``controller.ini`` file.
+    """
+
+    def runTest(self):
+        pass
+
+
+class SessionManagerIsSingleton(unittest.TestCase):
+    """
+    Find out if the :py:class:`SessionManager <arobito.controlinterface.BackendManager.SessionManager>` is created as
+    singleton.
+    """
+
+    def runTest(self):
+        """
+        Simply create two instances of :py:class:`UserManager <arobito.controlinterface.BackendManager.SessionManager>`
+        and compare them.
+        """
+
+        session_manager1 = SessionManager()
+        session_manager2 = SessionManager()
+        self.assertIsNotNone(session_manager1, 'Session Manager 1 is None')
+        self.assertIsNotNone(session_manager2, 'Session Manager 2 is None')
+        self.assertEqual(session_manager1, session_manager2, 'Session Manager objects are not equal')
