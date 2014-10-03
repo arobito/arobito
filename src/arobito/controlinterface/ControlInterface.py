@@ -177,9 +177,7 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
             cherrypy.config.update({'global': {
                 'server.socket_host': self.bind_ip,
                 'server.socket_port': self.listen_port,
-                'autoreload.on': False
-            }})
-            cherrypy.tree.mount(ArobitoControlInterfaceRedirect(), '/', {'/': {
+                'autoreload.on': False,
                 'tools.gzip.on': False,
                 'tools.encode.on': False,
                 'tools.response_headers.on': True,
@@ -192,32 +190,9 @@ class ArobitoControlInterface(object, metaclass=SingletonMeta):
                     ('X-Content-Type-Options', 'nosniff')
                 ]
             }})
-            cherrypy.tree.mount(ArobitoControlInterfaceStatics(), '/static', {'/': {
-                'tools.gzip.on': False,
-                'tools.encode.on': False,
-                'tools.response_headers.on': True,
-                'tools.response_headers.headers': [
-                    ('X-Frame-Options', 'DENY'),
-                    ('X-XSS-Protection', '1; mode=block'),
-                    ('Content-Security-Policy', csp),
-                    ('X-Content-Security-Policy', csp),
-                    ('X-Webkit-CSP', csp),
-                    ('X-Content-Type-Options', 'nosniff')
-                ]
-            }})
-            cherrypy.tree.mount(Controller.App(), '/app', {'/': {
-                'tools.gzip.on': False,
-                'tools.encode.on': False,
-                'tools.response_headers.on': True,
-                'tools.response_headers.headers': [
-                    ('X-Frame-Options', 'DENY'),
-                    ('X-XSS-Protection', '1; mode=block'),
-                    ('Content-Security-Policy', csp),
-                    ('X-Content-Security-Policy', csp),
-                    ('X-Webkit-CSP', csp),
-                    ('X-Content-Type-Options', 'nosniff')
-                ]
-            }})
+            cherrypy.tree.mount(ArobitoControlInterfaceRedirect(), '/', {'/': {}})
+            cherrypy.tree.mount(ArobitoControlInterfaceStatics(), '/static', {'/': {}})
+            cherrypy.tree.mount(Controller.App(), '/app', {'/': {}})
             cherrypy.engine.start()
             cherrypy.engine.block()
             return 0
