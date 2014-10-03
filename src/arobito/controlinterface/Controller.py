@@ -251,6 +251,9 @@ class App(object):
     auth_default_response = dict(auth=dict(success=False, status='failed', reason='User unknown or password wrong'))
 
     def __init__(self):
+        """
+        Initialize the main App with the :py:class:`SessionManager <.SessionManager>` instance.
+        """
         self.locked = True
         try:
             self.session_manager = SessionManager()
@@ -261,7 +264,53 @@ class App(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def auth(self):
+    def auth(self) -> dict:
+        """
+        Answer to an authorization request.
+
+        The request is a JSON post request that must look like this:
+
+        .. code-block:: javascript
+
+           {
+             'username': 'The User Name',
+             'password': 'The Password'
+           }
+
+        In case of a successful login, the response will look like this:
+
+        .. code-block:: javascript
+
+           {
+             'auth':
+             {
+               'success': true,
+               'status': 'Login successful',
+               'key': 'The Session Key'
+             }
+           }
+
+        Use the session key for all later requests.
+
+        In case of a failed login, the default fail response (:py:attribute:`auth_default_response
+        <.auth_default_response>` will look like this:
+
+        .. code-block:: javascript
+
+           {
+             'auth':
+             {
+               'success': false,
+               'status': 'failed',
+               'reason': 'User unknown or password wrong'
+             }
+           }
+
+        This method returns a dict. The dict is automatically converted to JSON by CherryPy.
+
+        :return: The authorization response as a dict
+        """
+
         if self.locked:
             return App.auth_default_response
         json = cherrypy.request.json
@@ -281,7 +330,31 @@ class App(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def logout(self):
+    def logout(self) -> dict:
+        """
+        Perform a logout with the given session key.
+
+        A logout request must be a JSON post request that looks like the following:
+
+        .. code-block:: javascript
+
+           {
+             'key': 'The Session Key'
+           }
+
+        A logout request gets always a positive response:
+
+        .. code-block:: javascript
+
+           {
+             'logout': true
+           }
+
+        This method returns a dict that is converted to JSON by CherryPy.
+
+        :return: The positive response as a dict
+        """
+
         json = cherrypy.request.json
         if 'key' in json:
             self.session_manager.logout(json['key'])
@@ -290,7 +363,42 @@ class App(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def shutdown(self):
+    def shutdown(self) -> dict:
+        """
+        Initiate the shutdown for the controlling application.
+
+        This is only available to users of the level ``Administrator``. To initiate the shutdown, the following JSON
+        needs to be posted:
+
+        .. code-block:: javascript
+
+           {
+             'key': 'The Session Key'
+           }
+
+        The shutdown will be initiated within the next 10 seconds.
+
+        In case of success, the response looks like the following:
+
+        .. code-block:: javascript
+
+           {
+             'shutdown': true
+           }
+
+        The request fails on insufficient rights. The response is in this cases:
+
+        .. code-block:: javascript
+
+           {
+             'shutdown': false
+           }
+
+        The dict that is returned by this method is converted to JSON by CherryPy.
+
+        :return: The response as dict
+        """
+
         json = cherrypy.request.json
         if not 'key' in json:
             return dict(shutdown=False)
@@ -306,7 +414,40 @@ class App(object):
     @cherrypy.expose
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
-    def get_session_count(self):
+    def get_session_count(self) -> dict:
+        """
+        Get the current session count.
+
+        If the logged in user is an ``Administrator``, the count of currently active sessions is returned. The request
+        must be a JSON post and looks like this:
+
+        .. code-block:: javascript
+
+           {
+             'key': 'The Session Key'
+           }
+
+        In case of success, the number is returned (1 in this example):
+
+        .. code-block:: javascript
+
+           {
+             'session_count': 1
+           }
+
+        If there are insufficient rights, -1 is returned as result:
+
+        .. code-block:: javascript
+
+           {
+             'session_count': -1
+           }
+
+        The dict returned by this method is converted to JSON by CherryPy.
+
+        :return: The response as dict
+        """
+
         json = cherrypy.request.json
         if not 'key' in json:
             return dict(session_count=-1)
@@ -314,7 +455,6 @@ class App(object):
         if user is None:
             return dict(session_count=-1)
         if user['level'] == 'Administrator':
-            Helper.shutdown(delay=10)
-            return dict(shutdown=self.session_manager.get_current_sessions())
+            return dict(session_count=self.session_manager.get_current_sessions())
         else:
             return dict(session_count=-1)

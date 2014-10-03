@@ -135,6 +135,9 @@ class ArobitoControlInterfaceRedirect(object):
     """
     @cherrypy.expose
     def index(self):
+        """
+        Do only the redirect to ``/static/index.html``.
+        """
         raise cherrypy.HTTPRedirect("/static/index.html")
 
 
