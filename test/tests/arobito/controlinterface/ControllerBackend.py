@@ -189,3 +189,31 @@ class AppLogout(unittest.TestCase):
         self.assertRegex(key, '^[a-zA-Z0-9]{64}$', 'Key looks not like expected')
         response = app.logout(dict(key=key))
         self.__check_response(response)
+
+
+class AppShutdown(unittest.TestCase):
+    """
+    Test the :py:meth:`App.shutdown <arobito.controlinterface.ControllerBackend.App.shutdown>` method.
+    """
+
+    def runTest(self) -> None:
+        """
+        Testing the shutdown method would cancel the program, so we can only check the behaviour with bad input.
+        """
+
+        app = create_app(self)
+
+        # Request with None
+        self.assertRaises(ValueError, app.shutdown, None)
+
+        # Request with bad object
+        self.assertRaises(ValueError, app.shutdown, list())
+
+        # Request with invalid key
+        response = app.shutdown(dict(key='invalid_key'))
+
+        self.assertIsNotNone(response, 'Response is None')
+        self.assertIsInstance(response, dict, 'Response is not a dict')
+        self.assertIn('shutdown', response, 'Response does not contain a shutdown element')
+        self.assertIsInstance(response['shutdown'], bool, 'Shutdown element is not boolean')
+        self.assertFalse(response['shutdown'], 'Shutdown element is not false')
