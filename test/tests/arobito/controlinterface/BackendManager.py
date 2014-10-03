@@ -176,7 +176,7 @@ class SessionManagerMultiTest(unittest.TestCase):
             self.assertRegex(key, '^[a-zA-Z0-9]{64}$', 'Key in loop run does not match expectations'.format(i))
             key_list.append(key)
             session_count = session_manager.get_current_sessions()
-            self.__check_count(session_count, i)
+            self.__check_count(session_count, i + 1)
 
         self.assertEqual(len(key_list), 1000, 'Key list is not of the size expected')
 
