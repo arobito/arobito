@@ -306,13 +306,14 @@ class AppGetSessionCount(unittest.TestCase):
             self.__check_valid_response(response, i + 2)
             key_list.append(key)
 
-        for i in range(10, 0):
+        for i in range(10, 0, -1):
             key = key_list.pop()
             app.logout(dict(key=key))
             response = app.get_session_count(dict(key=master_key))
             self.__check_valid_response(response, i + 1)
 
         app.logout(dict(key=master_key))
+        self.assertEqual(len(key_list), 0, 'KeyList is not empty')
 
         response = app.get_session_count(dict(key=master_key))
         self.__check_invalid_response(response)
