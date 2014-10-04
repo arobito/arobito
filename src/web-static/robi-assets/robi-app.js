@@ -147,6 +147,9 @@
     };
     
     local.initLoginForm = function() {
+	$('#loginForm').find('form input').each(function(obj) {
+	    $(obj).addClass('ui-corner-all');
+	});
         $('#loginForm').find('form').submit(function (evtObj) {
             robi.login($(this));
             return false;
@@ -160,7 +163,7 @@
                 primary: 'ui-icon-home'
             }
         }).click(function() {
-            local.loadPagelet('status');
+            robi.statusPage();
         });
         $('#mtLogoutButton').button({
             text: true,
