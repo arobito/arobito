@@ -44,7 +44,7 @@ def create_app(test: unittest.TestCase) -> App:
 
 def get_valid_key(test: unittest.TestCase, app: App=None) -> str:
     """
-    Produce a valid key by using the arobito default credentials against the :py:method:`App.auth
+    Produce a valid key by using the arobito default credentials against the :py:meth:`App.auth
     <arobito.controlinterface.ControllerBackend.App.auth>` method
 
     :param test: The currently running unit test case
