@@ -214,6 +214,8 @@ class SessionManagerMultiTest(unittest.TestCase):
         # Evaluate the user object returned
         evaluate_user_object(self, user_object)
 
+        session_manager.logout(key)
+
 
 class SessionManagerIsSingleton(unittest.TestCase):
     """

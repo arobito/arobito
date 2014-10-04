@@ -29,10 +29,42 @@ __maintainer__ = 'Jürgen Edelbluth'
 
 
 def create_app(test: unittest.TestCase) -> App:
+    """
+    Create an :py:class:`App <arobito.controlinterface.ControllerBackend.App>` instance
+
+    :param test: The currently running unit test case
+    :return: An instance of App
+    """
+
     app = App()
     test.assertIsNotNone(app)
     test.assertIsInstance(app, App)
     return app
+
+
+def get_valid_key(test: unittest.TestCase, app: App=None) -> str:
+    """
+    Produce a valid key by using the arobito default credentials against the :py:method:`App.auth
+    <arobito.controlinterface.ControllerBackend.App.auth>` method
+
+    :param test: The currently running unit test case
+    :return: A valid key
+    """
+    if app is None:
+        app = create_app(test)
+
+    request_valid = dict(username='arobito', password='arobito')
+    response = app.auth(request_valid)
+    test.assertIsNotNone(response, 'Response is none')
+    test.assertIsInstance(response, dict, 'Response is not a dict')
+    test.assertIn('auth', response, 'Response does not contain an auth element')
+    auth = response['auth']
+    test.assertIn('key', auth, 'Auth object does not contain a key')
+    key = auth['key']
+    test.assertIsNotNone(key, 'Key is None')
+    test.assertIsInstance(key, str, 'Key is not a String')
+    test.assertRegex(key, '^[a-zA-Z0-9]{64}$', 'Key looks not like expected')
+    return key
 
 
 class AppAuth(unittest.TestCase):
@@ -110,6 +142,7 @@ class AppAuth(unittest.TestCase):
         # Request with working credentials
         response = app.auth(request_ok)
         self.__check_success_response(response)
+        app.logout(dict(key=response['auth']['key']))
 
         # Request with wrong password
         response = app.auth(request_wrong_pass)
@@ -176,18 +209,7 @@ class AppLogout(unittest.TestCase):
         self.__check_response(response)
 
         # For a real test, we need a key, and therefore a auth first
-        request_valid = dict(username='arobito', password='arobito')
-        response = app.auth(request_valid)
-        self.assertIsNotNone(response, 'Response is none')
-        self.assertIsInstance(response, dict, 'Response is not a dict')
-        self.assertIn('auth', response, 'Response does not contain an auth element')
-        auth = response['auth']
-        self.assertIn('key', auth, 'Auth object does not contain a key')
-        key = auth['key']
-        self.assertIsNotNone(key, 'Key is None')
-        self.assertIsInstance(key, str, 'Key is not a String')
-        self.assertRegex(key, '^[a-zA-Z0-9]{64}$', 'Key looks not like expected')
-        response = app.logout(dict(key=key))
+        response = app.logout(dict(key=get_valid_key(self, app)))
         self.__check_response(response)
 
 
@@ -217,3 +239,80 @@ class AppShutdown(unittest.TestCase):
         self.assertIn('shutdown', response, 'Response does not contain a shutdown element')
         self.assertIsInstance(response['shutdown'], bool, 'Shutdown element is not boolean')
         self.assertFalse(response['shutdown'], 'Shutdown element is not false')
+
+
+class AppGetSessionCount(unittest.TestCase):
+    """
+    Test the :py:meth:`App.get_session_count <arobito.controlinterface.ControllerBackend.App.get_session_count>` method.
+    """
+
+    def __check_basic_response(self, response: dict) -> None:
+        """
+        Check the basics of a response objects
+
+        :param response: The response from the get_session_count method
+        """
+
+        self.assertIsNotNone(response, 'Response is None')
+        self.assertIsInstance(response, dict, 'Response is not a dict')
+        self.assertIn('session_count', response, 'Response does not contain session_count element')
+        self.assertIsInstance(response['session_count'], int, 'Session Count is not an Integer')
+
+    def __check_invalid_response(self, response: dict) -> None:
+        """
+        Check an invalid response object
+
+        :param response: The object to check
+        """
+
+        self.__check_basic_response(response)
+        self.assertEqual(response['session_count'], -1, 'Session count is not -1')
+
+    def __check_valid_response(self, response: dict, expected: int) -> None:
+        """
+        Check a valid response
+
+        :param response: The object to check
+        :param expected: The session count expected
+        """
+
+        self.__check_basic_response(response)
+        self.assertEqual(response['session_count'], expected, 'Session count is not {:d}'.format(expected))
+
+    def runTest(self) -> None:
+        """
+        Test the method with bad and valid input
+        """
+
+        app = create_app(self)
+
+        # Request with None
+        self.assertRaises(ValueError, app.get_session_count, None)
+
+        # Request with bad object
+        self.assertRaises(ValueError, app.get_session_count, list())
+
+        # Try with an invalid key
+        response = app.get_session_count(dict(key='invalid_key'))
+        self.__check_invalid_response(response)
+
+        # Work with valid keys
+        master_key = get_valid_key(self, app)
+        key_list = list()
+
+        for i in range(0, 10):
+            key = get_valid_key(self, app)
+            response = app.get_session_count(dict(key=master_key))
+            self.__check_valid_response(response, i + 2)
+            key_list.append(key)
+
+        for i in range(10, 0):
+            key = key_list.pop()
+            app.logout(dict(key=key))
+            response = app.get_session_count(dict(key=master_key))
+            self.__check_valid_response(response, i + 1)
+
+        app.logout(dict(key=master_key))
+
+        response = app.get_session_count(dict(key=master_key))
+        self.__check_invalid_response(response)
