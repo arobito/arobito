@@ -60,6 +60,12 @@ class App(object):
 
         if self.locked:
             return App.auth_default_response
+
+        if json_req is None:
+            raise ValueError('json_req cannot be None')
+        if not isinstance(json_req, dict):
+            raise ValueError('json_req must be a dict')
+
         username = None
         password = None
         if 'username' in json_req:
@@ -81,6 +87,11 @@ class App(object):
         :return: Response as dictionary
         """
 
+        if json_req is None:
+            raise ValueError('json_req cannot be None')
+        if not isinstance(json_req, dict):
+            raise ValueError('json_req must be a dict')
+
         if 'key' in json_req:
             self.session_manager.logout(json_req['key'])
         return dict(logout=True)
@@ -92,6 +103,11 @@ class App(object):
         :param json_req: The JSON request dict
         :return: Response as dictionary
         """
+
+        if json_req is None:
+            raise ValueError('json_req cannot be None')
+        if not isinstance(json_req, dict):
+            raise ValueError('json_req must be a dict')
 
         if not 'key' in json_req:
             return dict(shutdown=False)
@@ -112,6 +128,11 @@ class App(object):
         :param json_req: The JSON request dict
         :return: Response as dictionary
         """
+
+        if json_req is None:
+            raise ValueError('json_req cannot be None')
+        if not isinstance(json_req, dict):
+            raise ValueError('json_req must be a dict')
 
         if not 'key' in json_req:
             return dict(session_count=-1)

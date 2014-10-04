@@ -72,6 +72,7 @@ def run_tests() -> int:
               .format(case_count, test_class.__module__, test_class.__name__), file=sys.stderr)
 
     print(file=sys.stderr)
+    print('Running tests', file=sys.stderr)
     runner = unittest.TextTestRunner()
     module_result = runner.run(suite)
     run_count += module_result.testsRun

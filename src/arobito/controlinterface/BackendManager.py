@@ -51,16 +51,16 @@ class UserManager(object, metaclass=SingletonMeta):
 
         :raise IOError: When there can be no users.ini can be loaded or created.
         """
-        self.conf_file = FsTools.get_config_file('users.ini')
+        self.__conf_file = FsTools.get_config_file('users.ini')
         config = configparser.ConfigParser()
-        config.read(self.conf_file)
+        config.read(self.__conf_file)
         config_changed = False
         if not '_Config_' in config.sections():
             config.add_section('_Config_')
             config.set('_Config_', 'secret', create_salt())
             config_changed = True
         if config_changed:
-            with open(self.conf_file, 'w') as fh:
+            with open(self.__conf_file, 'w') as fh:
                 config.write(fh)
                 fh.flush()
                 fh.close()
@@ -69,13 +69,13 @@ class UserManager(object, metaclass=SingletonMeta):
             config.set('_Config_', 'secret', create_salt())
             config_changed = True
         if config_changed:
-            with open(self.conf_file, 'w') as fh:
+            with open(self.__conf_file, 'w') as fh:
                 config.write(fh)
                 fh.flush()
                 fh.close()
                 config_changed = False
         if len(config.sections()) < 1:
-            raise IOError('Invalid configuration in "{:s}"'.format(self.conf_file))
+            raise IOError('Invalid configuration in "{:s}"'.format(self.__conf_file))
         self.secret = config['_Config_']['secret']
         if len(config.sections()) == 1:
             # No std user!
@@ -87,11 +87,11 @@ class UserManager(object, metaclass=SingletonMeta):
             config.set('User:arobito', 'enabled', 'yes')
             config_changed = True
         if config_changed:
-            with open(self.conf_file, 'w') as fh:
+            with open(self.__conf_file, 'w') as fh:
                 config.write(fh)
                 fh.flush()
                 fh.close()
-        self.config = config
+        self.__config = config
 
     def get_user_by_username_and_password(self, username: str, password: str) -> dict:
         """
@@ -109,9 +109,9 @@ class UserManager(object, metaclass=SingletonMeta):
         if not UserManager.username_regex.match(username):
             return None
         user_section = 'User:{:s}'.format(username)
-        if not user_section in self.config.sections():
+        if not user_section in self.__config.sections():
             return None
-        section = self.config[user_section]
+        section = self.__config[user_section]
         level = 'level' in section and section['level'] or None
         salt = 'salt' in section and section['salt'] or None
         saved_password = 'password' in section and section['password'] or None
@@ -135,9 +135,9 @@ class SessionManager(object, metaclass=SingletonMeta):
         """
         Loads session defaults from the 'controller.ini' configuration file.
         """
-        self.conf_file = FsTools.get_config_file('controller.ini')
+        self.__conf_file = FsTools.get_config_file('controller.ini')
         config = configparser.ConfigParser()
-        config.read(self.conf_file)
+        config.read(self.__conf_file)
         config_changed = False
         if not 'SessionManagement' in config.sections():
             config.add_section('SessionManagement')
@@ -145,7 +145,7 @@ class SessionManager(object, metaclass=SingletonMeta):
             config.set('SessionManagement', 'max_inactivity', '3600')
             config_changed = True
         if config_changed:
-            with open(self.conf_file, 'w') as fh:
+            with open(self.__conf_file, 'w') as fh:
                 config.write(fh)
                 fh.flush()
                 fh.close()
@@ -157,15 +157,15 @@ class SessionManager(object, metaclass=SingletonMeta):
             config.set('SessionManagement', 'max_inactivity', '3600')
             config_changed = True
         if config_changed:
-            with open(self.conf_file, 'w') as fh:
+            with open(self.__conf_file, 'w') as fh:
                 config.write(fh)
                 fh.flush()
                 fh.close()
-        self.config = config
-        self.session_max_age = float(self.config['SessionManagement']['max_age_seconds'])
-        self.session_max_inactivity = float(self.config['SessionManagement']['max_inactivity'])
-        self.user_manager = UserManager()
-        self.sessions = dict()
+        self.__config = config
+        self.__session_max_age = float(self.__config['SessionManagement']['max_age_seconds'])
+        self.__session_max_inactivity = float(self.__config['SessionManagement']['max_inactivity'])
+        self.__user_manager = UserManager()
+        self.__sessions = dict()
 
     def login(self, username: str, password: str) -> str:
         """
@@ -178,11 +178,11 @@ class SessionManager(object, metaclass=SingletonMeta):
         :return: A session key or None on login failed
         """
         self.cleanup()
-        user = self.user_manager.get_user_by_username_and_password(username, password)
+        user = self.__user_manager.get_user_by_username_and_password(username, password)
         if user is None:
             return None
         key = create_simple_key()
-        self.sessions[key] = user
+        self.__sessions[key] = user
         return key
 
     def logout(self, session: str) -> None:
@@ -192,23 +192,23 @@ class SessionManager(object, metaclass=SingletonMeta):
         :param session: The session to log out
         """
         if not session is None:
-            self.sessions.pop(session, None)
+            self.__sessions.pop(session, None)
 
     def cleanup(self) -> None:
         """
         Clean left-over and old sessions from the SessionManager
         """
         current_time = time.time()
-        for d in self.sessions:
-            user = self.sessions.get(d, None)
+        for d in self.__sessions:
+            user = self.__sessions.get(d, None)
             if user is None:
                 continue
             age = current_time - user['timestamp']
             last_access = current_time - user['last_access']
-            if age > self.session_max_age:
+            if age > self.__session_max_age:
                 self.logout(d)
                 continue
-            if last_access > self.session_max_inactivity:
+            if last_access > self.__session_max_inactivity:
                 self.logout(d)
 
     def get_user(self, session: str) -> dict:
@@ -223,10 +223,10 @@ class SessionManager(object, metaclass=SingletonMeta):
         self.cleanup()
         if session is None:
             return None
-        if not session in self.sessions:
+        if not session in self.__sessions:
             return None
-        self.sessions[session]['last_access'] = time.time()
-        return self.sessions[session]
+        self.__sessions[session]['last_access'] = time.time()
+        return self.__sessions[session]
 
     def get_current_sessions(self) -> int:
         """
@@ -237,4 +237,4 @@ class SessionManager(object, metaclass=SingletonMeta):
         :return: The count of active sessions.
         """
         self.cleanup()
-        return len(self.sessions)
+        return len(self.__sessions)
