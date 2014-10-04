@@ -1,5 +1,21 @@
 @charset 'UTF-8';
 
+/*
+    Copyright 2014 The Arobito Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
 body {
     background-color: #ededed;
     padding: 0px;
@@ -11,7 +27,7 @@ header {
     padding: 0px;
     border-bottom: 3px solid #666666;
     background-color: #999999;
-    background-image: url('robi-eyes_150x84.png');
+    background-image: url('arobito-eyes_150x84.png');
     background-attachment: fixed;
     background-position: 10px 5px;
     background-repeat: no-repeat;
@@ -28,16 +44,61 @@ header h1 {
     line-height: 95px;
 }
 
-div#loginForm {
+.ui-widget,
+.ui-widget .ui-widget
+{
+    font-size: 90% !important;
+}
+
+div#loginForm,
+div#navigationBlock {
     background-color: #aaaaaa;
-    text-align: right;
     padding: 3px;
     margin: 0px;
     margin-bottom: 10px;
+}
+
+div#loginForm {
+    text-align: right;
+}
+
+div#navigationBlock {
+    text-align: left;
+    display: none;
+}
+
+div#navigationBlock div#mainToolbar {
+    display: table;
+}
+
+div#navigationBlock div#mainToolbar div#leftToolbar,
+div#navigationBlock div#mainToolbar div#rightToolbar {
+    padding: 4px;
+    display: table-cell;
+}
+
+div#navigationBlock div#mainToolbar div#leftToolbar {
+    text-align: left;
+}
+
+div#navigationBlock div#mainToolbar div#rightToolbar {
+    text-align: right;
+}
+
+div#navigationBlock div#mainToolbar div#leftToolbar div.tb,
+div#navigationBlock div#mainToolbar div#rightToolbar div.tb {
+    display: inline-block;
+    padding: 4px;
 }
 
 div#application {
     margin: 0px;
     margin-top: 10px;
     padding: 5px;
+}
+
+h1 {
+    font-family: sans-serif;
+    font-size: 20px;
+    font-weight: bold;
 }
