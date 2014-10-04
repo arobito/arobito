@@ -1,8 +1,23 @@
 <!DOCTYPE html>
+<!--
+    Copyright 2014 The Arobito Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Robi Web Control</title>
+    <title>Arobito Web Control</title>
     <link rel="stylesheet" type="text/css" href="/static/jq/jquery-ui/jquery-ui.min.css" />
     <link rel="stylesheet" type="text/css" href="/static/jq/jquery-ui/jquery-ui.structure.min.css" />
     <link rel="stylesheet" type="text/css" href="/static/jq/jquery-ui/jquery-ui.theme.min.css" />
@@ -17,7 +32,7 @@
 </head>
 <body>
     <header>
-        <h1>Robi Web Control</h1>
+        <h1>Arobito Web Control</h1>
     </header>
     <div id="loginForm">
         <form method="post" action="/app/auth">
@@ -25,6 +40,20 @@
             <input type="password" name="password" placeholder="Password" />
             <input type="submit" name="login" value="Login" />
         </form>
+    </div>
+    <div id="navigationBlock">
+        <div id="mainToolbar">
+            <div id="leftToolbar">
+                <div class="tb ui-widget-header ui-corner-all">
+                    <button id="mtPageStatusButton">Status</button>
+                </div>
+            </div>
+            <div id="rightToolbar">
+                <div class="tb ui-widget-header ui-corner-all">
+                    <button id="mtLogoutButton">Logout</button>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="application"></div>
 </body>

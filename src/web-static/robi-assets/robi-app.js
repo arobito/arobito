@@ -1,22 +1,38 @@
+/*
+    Copyright 2014 The Arobito Project
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
+
 (function ($, robi) {
     "use strict";
 
     var local = {};
     local.clientKey = null;
 
-    robi.error = function (title, message) {
+    robi.error = function(title, message) {
         $.growl.error({ message: message, title: title });
     };
 
-    robi.warn = function (title, message) {
+    robi.warn = function(title, message) {
         $.growl.warning({ message: message, title: title });
     };
     
-    robi.notice = function (title, message) {
+    robi.notice = function(title, message) {
         $.growl.notice({ message: message, title: title });
     };
 
-    robi.message = function (title, message) {
+    robi.message = function(title, message) {
         $.growl({ message: message, title: title });
     };
 
@@ -24,7 +40,7 @@
         return (null !== local.clientKey);
     };
     
-    local.loadPagelet = function (container, pagelet) {
+    local.loadPagelet = function(container, pagelet) {
         $(container).load('/static/pagelets/' + pagelet + '.html',
             function (response, status, xhr) {
                 if (status === 'error') {
@@ -33,11 +49,11 @@
             });
     };
     
-    robi.statusPage = function () {
+    robi.statusPage = function() {
         local.loadPagelet('#application', 'status');
     };
     
-    local.login = function (data) {
+    local.login = function(data) {
         if (!(data.auth)) {
             robi.error('Login failed', 'Unknown answer received from server!');
             return;
@@ -49,6 +65,7 @@
         if (true === data.auth.success) {
             local.clientKey = data.auth.key;
             $('#loginForm').css('display', 'none');
+            $('#navigationBlock').css('display', 'block');
             robi.notice('Login successful', 'Thank you, have fun!');
             robi.statusPage();
             return;
@@ -56,14 +73,15 @@
         robi.warn('Login failed', 'Failed for an unknown reason.');
     };
     
-    local.logout = function (data) {
+    local.logout = function(data) {
         local.clientKey = null;
+        $('#navigationBlock').css('display', 'none');
         $('#loginForm').css('display', 'block');
         robi.notice('Logout successful', 'Good bye!');
         robi.statusPage();
     };
 
-    local.shutdown = function (data) {
+    local.shutdown = function(data) {
         if (data.shutdown) {
             robi.notice('Shutdown request sent', 'Robi is shutting down.');
         }
@@ -76,7 +94,7 @@
         // TODO
     };
     
-    robi.login = function (f) {
+    robi.login = function(f) {
         var username = $(f).find('input[name="username"]').val(),
             password = $(f).find('input[name="password"]').val(),
             target = $(f).attr('action');
@@ -92,7 +110,7 @@
         });
     };
     
-    robi.logout = function () {
+    robi.logout = function() {
         $.ajax('/app/logout', {
             data: JSON.stringify({ key: local.clientKey }),
             success: function (data, status, xhr) {
@@ -104,7 +122,7 @@
         });
     };
 
-    robi.shutdown = function () {
+    robi.shutdown = function() {
         $.ajax('/app/shutdown', {
             data: JSON.stringify({ key: local.clientKey }),
             success: function (data, status, xhr) {
@@ -128,7 +146,33 @@
         });
     };
     
-    local.init = function () {
+    local.initLoginForm = function() {
+        $('#loginForm').find('form').submit(function (evtObj) {
+            robi.login($(this));
+            return false;
+        });
+    };
+    
+    local.initMainToolbar = function() {
+        $('#mtPageStatusButton').button({
+            text: true,
+            icons: {
+                primary: 'ui-icon-home'
+            }
+        }).click(function() {
+            local.loadPagelet('status');
+        });
+        $('#mtLogoutButton').button({
+            text: true,
+            icons: {
+                primary: 'ui-icon-close'
+            }
+        }).click(function() {
+            robi.logout();
+        });
+    };
+    
+    local.init = function() {
         $.ajaxSetup({
             cache: false,
             dataType: 'json',
@@ -139,10 +183,8 @@
         });
         $(document).ready(function () {
             robi.statusPage();
-            $('#loginForm').find('form').submit(function (evtObj) {
-                robi.login($(this));
-                return false;
-            });
+            local.initLoginForm();
+            local.initMainToolbar();
         });
     };
     
