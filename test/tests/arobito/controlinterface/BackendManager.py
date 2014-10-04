@@ -112,6 +112,13 @@ class SessionManagerMultiTest(unittest.TestCase):
     """
 
     def __check_count(self, count: int, expected: int) -> None:
+        """
+        Check if count matches the expected count (and that the type matches and it's not None)
+
+        :param count: The count to check
+        :param expected: The expected count
+        """
+
         self.assertIsNotNone(count, 'Count is None')
         self.assertIsInstance(count, int, 'Count is not Integer')
         self.assertEqual(count, expected, 'Count is not {:d}'.format(expected))
